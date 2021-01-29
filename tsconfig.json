@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "allowJs": false,
+    "esModuleInterop": true,
+    "declaration": false,
+    "jsx": "preserve",
+    "lib": ["ESNext", "WebWorker"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "target": "ESNext",
+    "types": ["@cloudflare/workers-types"],
+    "strict": true
+  },
+  "exclude": ["node_modules", "*.test.ts"]
+}
