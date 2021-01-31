@@ -3,6 +3,8 @@
     "packages/*"
   ],
   "name": "cloudflare-workers",
+  "version": "0.0.0",
+  "description": "A Monorepo for Cloudflare Workers",
   "private": true,
   "author": {
     "name": "Sascha Zarhuber",
