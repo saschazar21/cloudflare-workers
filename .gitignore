@@ -1,6 +1,3 @@
-# Cloudflare Workers worker directory
-worker/
-
 # Created by https://www.toptal.com/developers/gitignore/api/node,vscode,rust
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,vscode,rust
 
