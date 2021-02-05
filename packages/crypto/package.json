@@ -1,0 +1,27 @@
+{
+  "name": "@saschazar/worker-crypto",
+  "version": "0.0.0",
+  "description": "A Cloudflare Worker generating RSA keys using Rust",
+  "main": "dist/worker.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "wrangler dev",
+    "build": "wrangler build",
+    "preview": "wrangler preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saschazar21/cloudflare-workers.git"
+  },
+  "author": "Sascha Zarhuber <saschazar21@yahoo.de>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/saschazar21/cloudflare-workers/issues"
+  },
+  "homepage": "https://github.com/saschazar21/cloudflare-workers#readme",
+  "devDependencies": {
+    "@wasm-tool/wasm-pack-plugin": "^1.3.2"
+  }
+}
