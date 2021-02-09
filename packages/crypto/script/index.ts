@@ -1,13 +1,22 @@
+import { generateKey } from './crypto';
+import { Router } from './router';
+
 const handleRequest = async (request: Request): Promise<Response> => {
-  const { Crypto } = await import('../pkg');
+  try {
+    const router = new Router();
 
-  const key = new Crypto(1024).export_private();
+    router.get({
+      pattern: '/key(/:bit)',
+      handler: generateKey,
+    });
 
-  return new Response(key, {
-    headers: {
-      'Content-Type': 'text/plain',
-    },
-  });
+    return router.route(request);
+  } catch (e) {
+    return new Response(e.message, {
+      headers: { 'Content-Type': 'text/plain' },
+      status: 500,
+    });
+  }
 };
 
 addEventListener('fetch', (event) =>

@@ -1,9 +1,13 @@
 import UrlPattern from 'url-pattern';
 
+export interface StringObject {
+  [key: string]: string;
+}
+
 export interface RouteConfig {
   method?: METHOD;
   pattern: string;
-  handler: (request: Request) => Response;
+  handler: (match: StringObject, req?: Request) => Promise<Response>;
 }
 
 enum METHOD {
@@ -17,10 +21,32 @@ const Method = (method: METHOD) => (req: Request) =>
   req.method.toLowerCase() === method;
 
 export class Router {
-  private config: RouteConfig[] = [];
+  private config: RouteConfig[];
+
+  constructor() {
+    this.config = [];
+  }
 
   private handle(config: RouteConfig): void {
     this.config.push(config);
+  }
+
+  private resolve(req: Request): RouteConfig | undefined {
+    const url = new URL(req.url).pathname;
+
+    return this.config.find((config: RouteConfig): boolean => {
+      const method = Method(config.method as METHOD);
+      if (!method(req)) {
+        return false;
+      }
+
+      const pattern = new UrlPattern(config.pattern);
+      if (!pattern.match(url)) {
+        return false;
+      }
+
+      return true;
+    });
   }
 
   get(config: RouteConfig): void {
@@ -39,29 +65,16 @@ export class Router {
     return this.handle({ ...config, method: METHOD.POST });
   }
 
-  resolve(req: Request): RouteConfig | undefined {
-    return this.config.find((config: RouteConfig): boolean => {
-      const method = Method(config.method as METHOD);
-      if (!method(req)) {
-        return false;
-      }
+  route(req: Request): Response | Promise<Response> {
+    const url = new URL(req.url).pathname;
+    const { pattern, handler } = this.resolve(req) || {};
 
-      const pattern = new UrlPattern(config.pattern);
-      if (!pattern.match(req.url)) {
-        return false;
-      }
-
-      return true;
-    });
-  }
-
-  route(req: Request): Response {
-    const route = this.resolve(req);
-
-    if (!route?.handler) {
+    if (!handler) {
       return new Response(null, { status: 404 });
     }
 
-    return route.handler(req);
+    const match = new UrlPattern(pattern as string).match(url);
+
+    return handler(match, req);
   }
 }
