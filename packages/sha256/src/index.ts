@@ -7,8 +7,35 @@
  * @returns {Promise<Response>} - A Promise of a Fetch API Response
  */
 const handleEvent = async (request: Request): Promise<Response> => {
+  // if Preflight request was sent, return Access-Control-* headers
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'OPTIONS, POST',
+        'Access-Control-Max-Age': '86000',
+        Allow: 'OPTIONS, POST',
+      },
+      status: 204,
+    });
+  }
+
+  // if no POST request is detected, return 'Method Not Allowed'
+  if (request.method !== 'POST') {
+    return new Response(null, {
+      status: 405,
+    });
+  }
+
   // extract value from the 'text' property of the Request body
   const { text }: { text: string } = await request.json();
+
+  // if no or empty text is contained within request, return 'Bad Request' error
+  if (!text?.length) {
+    return new Response(null, {
+      status: 400,
+    });
+  }
 
   // encode utf-8 text into a Uint8Array
   const encoded = new TextEncoder().encode(text);

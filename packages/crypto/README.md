@@ -1,69 +1,28 @@
-<div align="center">
+# RSA worker example
 
-  <h1><code>wasm-pack-template</code></h1>
+**⚠️ CAUTION**: currently exceeds time limit for Cloudflare Workers, therefore not usable in standard setup as of now.
 
-  <strong>A template for kick starting a Rust and WebAssembly project using <a href="https://github.com/rustwasm/wasm-pack">wasm-pack</a>.</strong>
+> generates random RSA key & returns it in PEM format. Written in Rust
 
-  <p>
-    <a href="https://travis-ci.org/rustwasm/wasm-pack-template"><img src="https://img.shields.io/travis/rustwasm/wasm-pack-template.svg?style=flat-square" alt="Build Status" /></a>
-  </p>
+## Prerequsites
 
-  <h3>
-    <a href="https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/index.html">Tutorial</a>
-    <span> | </span>
-    <a href="https://discordapp.com/channels/442252698964721669/443151097398296587">Chat</a>
-  </h3>
+To successfully build this project, either build the Docker Image using the [Dockerfile](../../Dockerfile), or make sure that the following packages are in your `$PATH` variable:
 
-  <sub>Built with 🦀🕸 by <a href="https://rustwasm.github.io/">The Rust and WebAssembly Working Group</a></sub>
-</div>
+- `rustup` (therefore `rustc` & `cargo`)
+- `wasm-pack`
+- `cargo-generate`
+- `wrangler` (optional, since not usable on Cloudflare Workers as of now)
 
-## About
+## Example
 
-[**📚 Read this template tutorial! 📚**][template-docs]
+To generate a random 1024-bit RSA key, perform an example request like the following:
 
-This template is designed for compiling Rust libraries into WebAssembly and
-publishing the resulting package to NPM.
-
-Be sure to check out [other `wasm-pack` tutorials online][tutorials] for other
-templates and usages of `wasm-pack`.
-
-[tutorials]: https://rustwasm.github.io/docs/wasm-pack/tutorials/index.html
-[template-docs]: https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/index.html
-
-## 🚴 Usage
-
-### 🐑 Use `cargo generate` to Clone this Template
-
-[Learn more about `cargo generate` here.](https://github.com/ashleygwilliams/cargo-generate)
-
-```
-cargo generate --git https://github.com/rustwasm/wasm-pack-template.git --name my-project
-cd my-project
+```bash
+curl -X GET http://localhost:8787/key/1024
 ```
 
-### 🛠️ Build with `wasm-pack build`
+Other supported bitsizes are:
 
-```
-wasm-pack build
-```
-
-### 🔬 Test in Headless Browsers with `wasm-pack test`
-
-```
-wasm-pack test --headless --firefox
-```
-
-### 🎁 Publish to NPM with `wasm-pack publish`
-
-```
-wasm-pack publish
-```
-
-## 🔋 Batteries Included
-
-* [`wasm-bindgen`](https://github.com/rustwasm/wasm-bindgen) for communicating
-  between WebAssembly and JavaScript.
-* [`console_error_panic_hook`](https://github.com/rustwasm/console_error_panic_hook)
-  for logging panic messages to the developer console.
-* [`wee_alloc`](https://github.com/rustwasm/wee_alloc), an allocator optimized
-  for small code size.
+- **2048**: `/key/2048`
+- **3072**: `/key/3072`
+- **4096**: `/key/4096`
