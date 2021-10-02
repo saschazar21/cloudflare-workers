@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "A Cloudflare Worker generating RSA keys using Rust",
   "main": "dist/worker.js",
+  "private": true,
   "directories": {
     "test": "tests"
   },
