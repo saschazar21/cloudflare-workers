@@ -6,6 +6,11 @@ route = ""
 zone_id = ""
 compatibility_date = "2021-10-02"
 
+[[kv_namespaces]]
+binding = "BOOLEANS"
+id = "b9cf68036372410a8bbb37405b51b53a"
+preview_id = "6ce5033c65dd48b999545240b3b10071"
+
 [build]
 command = "yarn build:worker"
 

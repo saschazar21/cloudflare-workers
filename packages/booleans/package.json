@@ -15,7 +15,13 @@
   "author": "Sascha Zarhuber <sascha.zarhuber@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/qs": "^6.9.7",
     "esbuild": "^0.13.3",
     "prettier": "^1.18.2"
+  },
+  "dependencies": {
+    "nanoid": "^3.1.28",
+    "qs": "^6.10.1",
+    "url-pattern": "^1.0.3"
   }
 }
