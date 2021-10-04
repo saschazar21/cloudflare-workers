@@ -1,5 +1,5 @@
 import HTTPError from './http-error';
-import { corsHeaders, handleRequest } from './router';
+import { corsHeaders, handleRequest, staticHeaders } from './router';
 
 /**
  * The main event handler for Cloudflare Workers
@@ -29,12 +29,12 @@ const handleEvent = async (request: Request): Promise<Response> => {
     if ((e as Error).name === 'HTTPError') {
       return new Response((e as HTTPError).message, {
         status: (e as HTTPError).code,
-        headers: { 'Content-Type': 'text/plain' },
+        headers: { ...staticHeaders, 'Content-Type': 'text/plain' },
       });
     }
     return new Response('Internal Server Error', {
       status: 500,
-      headers: { 'Content-Type': 'text/plain' },
+      headers: { ...staticHeaders, 'Content-Type': 'text/plain' },
     });
   }
 };

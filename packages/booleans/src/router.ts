@@ -1,6 +1,7 @@
 import UrlPattern from 'url-pattern';
 import { parse } from 'query-string';
 
+import pkg from '../../../package.json';
 import HTTPError from './http-error';
 import booleans, { Boolean } from './booleans';
 
@@ -9,6 +10,10 @@ const API_PREFIX = HOST + '/api/v1';
 const pattern = new UrlPattern(
   API_PREFIX.replace(/^https:/, 'https\\:') + '(/:key(/:value))',
 );
+
+export const staticHeaders = {
+  'X-Source-Code-Repository': pkg.repository.url,
+};
 
 const parseBody = async (
   request: Request,
@@ -24,10 +29,7 @@ const parseBody = async (
       const data = await request.json();
       return new Map(Object.entries(data));
     default:
-      throw new HTTPError(
-        'Only "application/json" & "application/x-www-form-urlencoded" values allowed for Content-Type.',
-        400,
-      );
+      return new Map<string, string>();
   }
 };
 
@@ -63,7 +65,7 @@ export const handleRequest = async (
   switch (method) {
     case 'HEAD':
     case 'OPTIONS':
-      const headers = corsHeaders(request);
+      const headers = { ...staticHeaders, ...corsHeaders(request) };
       return new Response(null, { status: 204, headers });
     case 'GET':
       if (!key) {
@@ -78,8 +80,21 @@ export const handleRequest = async (
           throw new HTTPError('Key is present, but value is missing.', 400);
         }
 
+        try {
+          const allowed = [true, false];
+          const parsed = JSON.parse((data.get('value') as string) || 'true');
+          if (allowed.indexOf(parsed) < 0) {
+            throw new Error('Invalid value given.');
+          }
+        } catch (e) {
+          throw new HTTPError(
+            `Invalid value "${data.get('value')}" given.`,
+            400,
+          );
+        }
+
         return booleans.put(
-          JSON.parse(data.get('value') as string),
+          JSON.parse((data.get('value') as string) || 'true'),
           data.get('key') as string,
           options,
         );
@@ -91,7 +106,11 @@ export const handleRequest = async (
     case 'DELETE':
       await booleans.delete(key);
       return new Response(null, {
-        headers: { 'Content-Length': '0', 'Content-Type': 'text/plain' },
+        headers: {
+          ...staticHeaders,
+          'Content-Length': '0',
+          'Content-Type': 'text/plain',
+        },
         status: 200,
       });
     default:

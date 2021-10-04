@@ -11,6 +11,10 @@
     "email": "sascha.zarhuber@gmail.com",
     "url": "https://sascha.work"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saschazar21/cloudflare-workers"
+  },
   "scripts": {
     "postinstall": "lerna bootstrap",
     "docker:build": "docker build -t saschazar:rust .",
