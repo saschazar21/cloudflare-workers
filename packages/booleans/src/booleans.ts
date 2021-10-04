@@ -6,7 +6,13 @@ export type Boolean = {
   metadata: BooleansMetaData | null;
 };
 
+export type BooleanPutOptions = {
+  label?: string;
+  expires?: number;
+};
+
 export type BooleansMetaData = {
+  label?: string;
   createdAt: number;
   expiresAt?: number;
   updatedAt: number;
@@ -34,7 +40,7 @@ class Booleans {
   public async put(
     value: boolean = true,
     key?: string,
-    expiresSeconds?: number,
+    options?: BooleanPutOptions,
   ): Promise<Boolean> {
     let metadata = Object.assign(
       {
@@ -42,9 +48,10 @@ class Booleans {
         updatedAt: new Date().valueOf(),
         version: 1,
       },
-      !!expiresSeconds
-        ? { expiresAt: new Date().valueOf() + expiresSeconds * 1000 }
+      !!options?.expires
+        ? { expiresAt: new Date().valueOf() + options.expires * 1000 }
         : {},
+      options?.label?.length ? { label: options.label } : {},
     );
 
     const { value: found, metadata: foundMetadata }: Boolean = key
@@ -67,15 +74,16 @@ class Booleans {
           updatedAt: metadata.updatedAt,
           version: foundMetadata.version + 1,
         },
-        !!expiresSeconds ? { expiresAt: metadata.expiresAt } : {},
+        !!options?.expires ? { expiresAt: metadata.expiresAt } : {},
+        options?.label?.length ? { label: options.label } : {},
       );
     }
 
-    const options = Object.assign(
+    const newOptions = Object.assign(
       { metadata },
-      !!expiresSeconds ? { expirationTtl: expiresSeconds } : {},
+      !!options?.expires ? { expirationTtl: options.expires } : {},
     );
-    await BOOLEANS.put(newKey, JSON.stringify(value), options);
+    await BOOLEANS.put(newKey, JSON.stringify(value), newOptions);
 
     return {
       key: newKey,

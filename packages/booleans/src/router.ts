@@ -10,6 +10,27 @@ const pattern = new UrlPattern(
   API_PREFIX.replace(/^https:/, 'https\\:') + '(/:key(/:value))',
 );
 
+const parseBody = async (
+  request: Request,
+): Promise<Map<string, FormDataEntryValue>> => {
+  const { headers } = request;
+  const contentType = headers.get('content-type');
+
+  switch (contentType) {
+    case 'application/x-www-form-urlencoded':
+      const formData = await request.formData();
+      return new Map(formData.entries());
+    case 'application/json':
+      const data = await request.json();
+      return new Map(Object.entries(data));
+    default:
+      throw new HTTPError(
+        'Only "application/json" & "application/x-www-form-urlencoded" values allowed for Content-Type.',
+        400,
+      );
+  }
+};
+
 export const corsHeaders = (request: Request): HeadersInit => ({
   'Content-Length': '0',
   'Access-Control-Max-Age': '86400',
@@ -30,8 +51,14 @@ export const handleRequest = async (
   }
 
   const { key, value } = matched;
-  const { expires } = parse(query);
+  const { expires, label } = parse(query);
   const expiresAfterSeconds = parseInt(expires as string, 10);
+
+  const options = Object.assign(
+    {},
+    !isNaN(expiresAfterSeconds) ? { expires: expiresAfterSeconds } : {},
+    label ? { label: label as string } : {},
+  );
 
   switch (method) {
     case 'HEAD':
@@ -46,9 +73,7 @@ export const handleRequest = async (
     case 'PUT':
     case 'POST':
       if (!key) {
-        const formData = await request.formData();
-        const data = new Map(formData.entries());
-
+        const data = await parseBody(request);
         if (data.has('key') && !data.has('value')) {
           throw new HTTPError('Key is present, but value is missing.', 400);
         }
@@ -56,17 +81,13 @@ export const handleRequest = async (
         return booleans.put(
           JSON.parse(data.get('value') as string),
           data.get('key') as string,
-          !isNaN(expiresAfterSeconds) ? expiresAfterSeconds : undefined,
+          options,
         );
       }
       if (key && !value) {
         throw new HTTPError('Key is present, but value is missing.', 400);
       }
-      return booleans.put(
-        JSON.parse(value),
-        key,
-        !isNaN(expiresAfterSeconds) ? expiresAfterSeconds : undefined,
-      );
+      return booleans.put(JSON.parse(value), key, options);
     case 'DELETE':
       await booleans.delete(key);
       return new Response(null, {
