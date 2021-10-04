@@ -49,7 +49,7 @@ class Booleans {
 
     const { value: found, metadata: foundMetadata }: Boolean = key
       ? await this.get(key)
-      : ({} as Boolean);
+      : ({ value: null, metadata: null } as Boolean);
     const newKey = found !== null ? (key as string) : nanoid();
 
     if (found === value) {

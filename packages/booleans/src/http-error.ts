@@ -1,6 +1,8 @@
 class HTTPError extends Error implements Error {
   private _code: number;
 
+  public name = 'HTTPError';
+
   public get code(): number {
     return this._code;
   }
