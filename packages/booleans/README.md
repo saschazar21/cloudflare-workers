@@ -133,6 +133,10 @@ Whenever a boolean has been created or updated, a response like the following is
 
 Whenever the creation/update has failed, the server will return either a `400 Bad Request` or `500 Internal Server Error` HTTP response.
 
+### `PUT /api/v1/:key/:value`
+
+This endpoint is just a shallow clone of the [POST endpoint](#post-apiv1keyvalue).
+
 ### `DELETE /api/v1/:key`
 
 Deletes the boolean value stored under the key `:key`.
