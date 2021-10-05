@@ -4323,6 +4323,11 @@ isstream@~0.1.2:
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
   integrity sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
 
+itty-router@^2.4.4:
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/itty-router/-/itty-router-2.4.4.tgz#2d686b9525188dbc6da0dd1780eed106f7a892e8"
+  integrity sha512-mp5i47ZotK94FHondKJTZn/0dBAFzFpZpiHWn+aCgr/sg9cIVzt1gvLCKsXMkcHgKejb9GdhqvOfh7VYJJlQoQ==
+
 jest-worker@^26.6.2:
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-26.6.2.tgz#7f72cbc4d643c365e27b9fd775f9d0eaa9c7a8ed"
