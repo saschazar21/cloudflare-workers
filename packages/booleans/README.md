@@ -10,7 +10,7 @@
 
 ## API
 
-The currently available REST endpoints are listed below:
+This project exposes a collection of [json:api](https://jsonapi.org/)-conform endpoints to create, update & delete boolean values.
 
 ### `GET /api/v1/:key`
 
@@ -32,9 +32,17 @@ If a boolean value exists under the given `key`, a response like the following i
 
 ```json
 {
-  "key": "bFNTGNhRNphnqb",
-  "value": true,
-  "metadata": {
+  "data": {
+    "id": "bFNTGNhRNphnqb",
+    "attributes": {
+      "value": true
+    },
+    "type": "boolean",
+    "link": {
+      "self": "https://booleans.saschazar.workers.dev/api/v1/bFNTGNhRNphnqb"
+    }
+  },
+  "meta": {
     "createdAt": 1633348116000,
     "updatedAt": 1633348116000,
     "version": 1
@@ -48,9 +56,16 @@ Should the given `key` not exist, an object containing `null` values is returned
 
 ```json
 {
-  "key": "bFNTGNhRNphnqb",
-  "value": null,
-  "metadata": null
+  "data": {
+    "id": "bFNTGNhRNphnqb",
+    "attributes": {
+      "value": null
+    },
+    "type": "boolean",
+    "link": {
+      "self": "https://booleans.saschazar.workers.dev/api/v1/bFNTGNhRNphnqb"
+    }
+  }
 }
 ```
 
@@ -119,9 +134,17 @@ Whenever a boolean has been created or updated, a response like the following is
 
 ```json
 {
-  "key": "bFNTGNhRNphnqb",
-  "value": true,
-  "metadata": {
+  "data": {
+    "id": "bFNTGNhRNphnqb",
+    "attributes": {
+      "value": true
+    },
+    "type": "boolean",
+    "link": {
+      "self": "https://booleans.saschazar.workers.dev/api/v1/bFNTGNhRNphnqb"
+    }
+  },
+  "meta": {
     "createdAt": 1633348116000,
     "updatedAt": 1633348116000,
     "version": 1
@@ -132,6 +155,17 @@ Whenever a boolean has been created or updated, a response like the following is
 #### Error Response
 
 Whenever the creation/update has failed, the server will return either a `400 Bad Request` or `500 Internal Server Error` HTTP response.
+
+```json
+{
+  "errors": [
+    {
+      "status": 400,
+      "title": "Only true or false allowed for value, but received \"truee\"."
+    }
+  ]
+}
+```
 
 ### `PUT /api/v1/:key/:value`
 
@@ -159,7 +193,7 @@ An empty response with status code `200 OK` is returned, without any further inf
 
 #### Error Response
 
-Whenever something has failed other than deleting the boolean entry, the server will return either a `400 Bad Request` or `500 Internal Server Error` HTTP response.
+Whenever something has failed other than deleting the boolean entry, the server will return either a `400 Bad Request` or `500 Internal Server Error` HTTP response. See [POST Error Response](#error-response-1)
 
 ## Credits
 
