@@ -1,9 +1,13 @@
+import { json } from 'itty-router-extras';
+
 import pkg from '../../../package.json';
 
 import booleans from './booleans';
+import { mapResult } from './helpers';
 import HTTPError from './http-error';
 
 export type ExtendedRequest = Request & {
+  basePath: string;
   parsedBody: Map<string, FormDataEntryValue>;
   params: Record<string, string>;
   query: Record<string, string>;
@@ -41,11 +45,11 @@ export const withCreateOrUpdateBoolean = async (
 ): Promise<Response> => {
   const { expires, label } = request.query || {};
   const { key: paramKey, value: paramValue } = request.params || {};
-  const bodyKey = request.parsedBody.get('key');
-  const bodyValue = request.parsedBody.get('value');
+  const bodyKey = request.parsedBody?.get('key');
+  const bodyValue = request.parsedBody?.get('value');
 
-  const key = paramKey || bodyKey;
-  const value = paramValue || bodyValue;
+  const key = paramKey ?? bodyKey;
+  const value = paramValue ?? bodyValue;
 
   const allowedValues = [undefined, 'true', 'false'];
 
@@ -57,7 +61,7 @@ export const withCreateOrUpdateBoolean = async (
   }
 
   const exp = parseInt(expires, 10);
-  if (isNaN(exp) || exp < 60) {
+  if (typeof expires !== 'undefined' && (isNaN(exp) || exp < 60)) {
     throw new HTTPError(
       `Expiry must be a number and greater or equal 60. Received ${expires}.`,
       400,
@@ -76,12 +80,10 @@ export const withCreateOrUpdateBoolean = async (
     options,
   );
 
-  return new Response(JSON.stringify(result), {
+  return json(mapResult(result, request), {
     headers: {
       ...request.response.headers,
       'Content-Type': 'application/json',
     },
   });
-
-  // TODO: add error handling
 };

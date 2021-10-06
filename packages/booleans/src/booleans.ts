@@ -6,6 +6,20 @@ export type Boolean = {
   metadata: BooleansMetaData | null;
 };
 
+export type BooleanResponse = {
+  data: {
+    attributes: {
+      value: boolean | null;
+    };
+    id: string;
+    links?: {
+      self: string;
+    };
+    type: string;
+  };
+  meta?: BooleansMetaData | null;
+};
+
 export type BooleanPutOptions = {
   label?: string;
   expires?: number;
@@ -30,6 +44,7 @@ class Booleans {
       value: string | null;
       metadata: BooleansMetaData | null;
     } = await BOOLEANS.getWithMetadata(key);
+
     return {
       key,
       value: value && JSON.parse(value),
