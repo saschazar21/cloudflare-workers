@@ -10,7 +10,8 @@
     "build:ts": "tsc --noEmit",
     "build:worker": "esbuild src/index.ts --bundle --outfile=dist/worker.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write '**/*.{js,css,json,md}'"
+    "format": "prettier --write '**/*.{js,css,json,md}'",
+    "deploy": "wrangler publish"
   },
   "author": "Sascha Zarhuber <sascha.zarhuber@gmail.com>",
   "license": "MIT",
