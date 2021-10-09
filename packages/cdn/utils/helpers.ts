@@ -1,4 +1,7 @@
-export const userAgentFields = [
+// https://www.urlregex.com/
+export const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
+
+export const USER_AGENT_FIELDS = [
   'user-agent',
   'sec-ch-ua',
   'sec-ch-ua-mobile',
@@ -9,7 +12,7 @@ export const userAgentFields = [
 export const extractUserAgentHeaders = (
   headers: Headers,
 ): Record<string, string | null> =>
-  userAgentFields.reduce(
+  USER_AGENT_FIELDS.reduce(
     (
       fields: Record<string, string | null>,
       current: string,
@@ -20,3 +23,5 @@ export const extractUserAgentHeaders = (
     },
     {} as Record<string, string>,
   );
+
+export const hasUrlFormat = (sample: string): boolean => URL_REGEX.test(sample);

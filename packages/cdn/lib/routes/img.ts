@@ -1,6 +1,7 @@
 import { Router } from 'itty-router';
 
 import { getImageUrl, UrlOptions } from '../ext/cloudinary';
+import { hasUrlFormat } from '../../utils/helpers';
 import { extractUserAgentHeaders } from '../../utils/helpers';
 import HTTPError from '../../utils/http-error';
 
@@ -12,6 +13,12 @@ const router = Router({
 
 router.get('/:name', async ({ headers, params, query }: ExtendedRequest) => {
   try {
+    if (hasUrlFormat(decodeURIComponent(params.name))) {
+      throw new HTTPError(
+        'URL formats instead of image names are not allowed.',
+        400,
+      );
+    }
     const url = getImageUrl(params.name, query as UrlOptions);
     console.log(url);
     return fetch(url, {
@@ -19,7 +26,9 @@ router.get('/:name', async ({ headers, params, query }: ExtendedRequest) => {
     });
   } catch (e) {
     console.error(e);
-    throw new HTTPError(`Error fetching image "${params.name}" from CDN.`, 500);
+    throw (e as Error).name === 'HTTPError'
+      ? e
+      : new HTTPError(`Error fetching image "${params.name}" from CDN.`, 500);
   }
 });
 
