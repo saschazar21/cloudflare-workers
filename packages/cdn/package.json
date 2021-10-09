@@ -1,0 +1,32 @@
+{
+  "name": "cdn",
+  "version": "1.0.0",
+  "description": "A CDN proxy including Cloudinary & other services",
+  "main": "dist/worker.js",
+  "repository": "https://github.com/saschazar21/cloudflare-workers",
+  "author": {
+    "name": "Sascha Zarhuber",
+    "email": "sascha.zarhuber@gmail.com",
+    "url": "https://sascha.work"
+  },
+  "license": "MIT",
+  "private": false,
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "esbuild lib/index.ts --bundle --define:CLOUDINARY_CLOUD_NAME=\\\"$CLOUDINARY_CLOUD_NAME\\\" --outfile=dist/worker.js",
+    "deploy": "wrangler publish"
+  },
+  "dependencies": {
+    "cloudinary-core": "^2.11.4",
+    "itty-router": "^2.4.4",
+    "itty-router-extras": "^0.4.2"
+  },
+  "devDependencies": {
+    "@cloudflare/wrangler": "^1.19.3",
+    "esbuild": "^0.13.4",
+    "typescript": "^4.4.3"
+  }
+}

@@ -1,0 +1,16 @@
+name = "cdn"
+type = "javascript"
+account_id = ''
+route = ''
+zone_id = ''
+usage_model = ''
+compatibility_flags = []
+workers_dev = true
+compatibility_date = "2021-10-09"
+
+[build]
+command = "yarn build"
+watch_dir = "lib"
+
+[build.upload]
+format = "service-worker"
